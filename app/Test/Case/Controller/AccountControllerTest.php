@@ -1,8 +1,8 @@
 <?php
-App::uses('CsController', 'Controller');
+App::uses('AccountController', 'Controller');
 
 /**
- * CsController Test Case
+ * AccountController Test Case
  */
 class AccountControllerTest extends ControllerTestCase {
 

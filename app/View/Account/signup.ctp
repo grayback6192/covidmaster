@@ -15,6 +15,11 @@
                     </div>
 
                     <div class="form-textbox">
+                        <label for="avatar">Avatar Name</label>
+                        <input type="avatar" name="avatar" id="avatar" />
+                    </div>
+
+                    <div class="form-textbox">
                         <label for="email">Email</label>
                         <input type="email" name="email" id="email" />
                     </div>
@@ -23,11 +28,6 @@
                         <label for="pass">Password</label>
                         <input type="password" name="pass" id="pass" />
                     </div>
-                    <div class="form-textbox">
-                        <label for="pass">Confirm Password</label>
-                        <input type="password" name="" id="" />
-                    </div>
-
                     <div class="form-textbox form-btn-submit">
                         <input type="submit" name="submit" id="submit" class="submit" value="Create account" />
                     </div>
