@@ -18,11 +18,12 @@ class AccountController extends AppController {
 			$user = $this->Account->find('first', array('email' => $this->request->data['email']));
 			if (password_verify($this->request->data('pass'), $user['Account']['password'])) {
 				$this->Session->write('user', $user);
+				return $this->redirect(array('controller' => 'dashboard', 'action' => 'index'));
 			}
 		}
 
 		if ($this->Session->read('user')) {
-			$this->redirect('/');
+			return $this->redirect(array('controller' => 'dashboard', 'action' => 'index'));
 		}
 
 	}

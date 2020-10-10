@@ -1,0 +1,39 @@
+.arena {
+    position: relative;
+    margin: auto;
+    margin-top: 100px;
+    width: 700px;
+    height: 500px;
+    background-color: gray;
+}
+
+.arena .row > div {
+    height: 500px;
+    padding: 0;
+}
+
+.healthbar {
+    position: relative;
+    height: 30px;
+    width: 250px;
+    border-radius: 10px;
+    margin: auto;
+    top: 60%;
+    text-align: center;
+    font-weight: 700;
+}
+
+.enemy .healthbar {
+    background-color: red;
+}
+.player .healthbar {
+    background-color: green;
+}
+.player-actions {
+    position: absolute;
+    top: 75%;
+    margin-left: 30px;
+}
+.player-actions button {
+    padding: 5px;
+}
