@@ -8,12 +8,10 @@ Class DashboardController extends AppController
 
     public function index()
     {
-		$this->layout = 'main';
     }
 
     public function battle()
     {
-        $this->layout = 'main';
     }
 
     public function configuration()
@@ -21,8 +19,13 @@ Class DashboardController extends AppController
 
     }
 
+    public function beforeFilter() 
+    {
+		if (!$this->Session->read('user')) {
+			return $this->redirect(array('controller' => 'Account', 'action' => 'signin'));
+		}
+        $this->layout = 'main';
+
+    }
+
 }
-
-
-
-?>

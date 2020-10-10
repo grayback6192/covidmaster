@@ -1,10 +1,11 @@
 .arena {
-    position: relative;
     margin: auto;
     margin-top: 100px;
     width: 700px;
     height: 500px;
-    background-color: gray;
+    background: rgb(62,97,125);
+    background: linear-gradient(90deg, rgba(62,97,125,1) 0%, rgba(131,131,131,1) 100%, rgba(237,237,237,1) 100%);
+    border-radius: 20px;
 }
 
 .arena .row > div {
@@ -22,12 +23,27 @@
     text-align: center;
     font-weight: 700;
 }
-
+.name {
+    font-size: 20px;
+}
+.healthbar {
+    margin-top: 20px;
+}
 .enemy .healthbar {
     background-color: red;
 }
-.player .healthbar {
+#player .healthbar {
     background-color: green;
+}
+.player-container {
+    position: relative;
+    text-align: center;
+    top: 280px;
+}
+.enemy-container {
+    position: relative;
+    text-align: center;
+    top: 280px;
 }
 .player-actions {
     position: absolute;
@@ -35,5 +51,17 @@
     margin-left: 30px;
 }
 .player-actions button {
-    padding: 5px;
+    margin: 2px;
+}
+
+.event {
+    text-align: center;
+}
+.event button {
+    position: relative;
+    top: 400px;
+}
+.event .timer {
+    font-size: 32px;
+    color: white;
 }

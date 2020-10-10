@@ -1,5 +1,6 @@
 <?php
     echo $this->Html->css('registerform');
+    $this->assign('title', 'Covid Masters | Sign in');
 ?>
 
 <div class="main">

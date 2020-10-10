@@ -16,7 +16,7 @@ class AccountController extends AppController {
 	{
 		if ($this->request->is('post')) {
 			$user = $this->Account->find('first', array('email' => $this->request->data['email']));
-			if (password_verify($this->request->data('pass'), $user['Account']['password'])) {
+			if (password_verify($this->request->data('pass'), $user['Account']['password']) && $user['Account']['email'] == $this->request->data('email')) {
 				$this->Session->write('user', $user);
 				return $this->redirect(array('controller' => 'dashboard', 'action' => 'index'));
 			}
