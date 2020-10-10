@@ -2,57 +2,175 @@
 <?php 
 $this->assign('title', 'Covid Masters | Battle');
 echo $this->Html->css('battle'); 
-
 ?>
-<div class="arena">
-    <div class="row">
-        <div class="col-lg-5" id="player"></div>
-        <div class="col-lg-2 event" style="border: 1px solid black">
-            <!-- <p class="timer"><strong>60</strong></p>  TODO FUNCTIONALITY-->
-            <button class="btn btn-primary">Start Battle</button>
-        </div>
-        <div class="col-lg-5 enemy">
-            <div class="enemy-container">
-                <div class="name">Covid</div>
-                <div class="healthbar">100%</div>
-            </div>
-        </div>
-    </div>
-</div>
+
+<div id="arena"></div>
 
 <script type="text/babel">
 
     class Player extends React.Component {
         state = {
+            playerStatus: '',
+            enemyStatus: '',
+            playerDmg: 10,
+            enemyDmg: 10,
             hp: 100,
-            name: "<?php echo $this->Session->read('user.Account.avatar') ?>"
+            enemyHp: 100,
+            name: "<?php echo $this->Session->read('user.Account.avatar') ?>",
+            enemyName: "<?php echo $enemyName ?>",
+            logs: '',
+            logsSummary: '',
+            actionStatus: 'disabled',
+            startBtnName: 'Start Battle',
+            startBtnAction: 'start-battle',
+            startBtnStatus: ''
         }
         handleClick = (e) => {
-            let hp = this.state.hp - (Math.floor(Math.random() * 10));
-            let action = event.target.getAttribute('action');
-            this.setState({
-                hp: hp
-            });
+            let hp, enemyHp, playerDmg, enemyDmg, logs, playerHeal, postData, status;
+            let logsSummary = this.state.logsSummary;
+            let action = event.target.getAttribute('data-action');
+
+            if (action == 'start-battle') {
+                this.setState({
+                    actionStatus: '',
+                    startBtnStatus: 'disabled',
+                    startBtnAction: 'reload'
+                });
+            } else if (action == 'reload') {
+                location.reload();
+            } else {
+
+                if (action == 'attack') {
+                    playerDmg = (Math.floor(Math.random() * this.state.playerDmg));
+                    enemyDmg = (Math.floor(Math.random() * this.state.enemyDmg));
+
+                    hp = this.state.hp - enemyDmg;
+                    enemyHp = this.state.enemyHp - playerDmg;
+
+                    logs = this.state.name + ' dealt ' + playerDmg + ' damage<br>' + this.state.enemyName + ' dealt ' + enemyDmg + ' damage<br><br>';
+
+                } else if (action == 'power') {
+                    playerDmg = (Math.floor(Math.random() * (this.state.playerDmg + 20)));
+                    enemyDmg = (Math.floor(Math.random() * (this.state.enemyDmg + 20)));
+
+                    hp = this.state.hp - enemyDmg;
+                    enemyHp = this.state.enemyHp - playerDmg;
+
+                    logs = this.state.name + ' dealt ' + playerDmg + ' damage<br>' + this.state.enemyName + ' dealt ' + enemyDmg + ' damage<br><br>';
+
+                } else if (action == 'potion') {
+                    playerHeal = (Math.floor(Math.random() * 10));
+                    enemyDmg = (Math.floor(Math.random() * this.state.enemyDmg));
+
+                    hp = (this.state.hp + playerHeal) - enemyDmg;
+                    enemyHp = this.state.enemyHp;
+
+                    logs = this.state.name + ' healed for ' + playerHeal + '<br>' + this.state.enemyName + ' dealt ' + enemyDmg + ' damage<br><br>';
+
+                } else if (action == 'giveup') {
+
+                    logs = this.state.name + ' healed for ' + playerHeal + '<br>' + this.state.enemyName + ' dealt ' + enemyDmg + ' damage<br><br>';
+                    
+                    postData = {
+                        'logs' : this.state.logsSummary,
+                        'status' : 'L',
+                        'enemyName' : this.state.enemyName
+                    };
+
+                    this.setState({
+                        actionStatus: 'disabled',
+                        startBtnName: 'New Battle',
+                        startBtnStatus: ''
+                    });
+
+                    $.ajax({ url: '/dashboard/battle', method: 'POST', data: postData });
+                }
+
+                if (hp <= 0 || enemyHp <=0) {
+
+                    if (hp > enemyHp) {
+                        status = 'W';
+                        this.setState({playerStatus: 'Winner'});
+                    } else if (hp < enemyHp) {
+                        status = 'L';
+                        this.setState({enemyStatus: 'Winner'});
+                    } else if (hp <= 0 && enemyHp <= 0) {
+                        status = 'D';
+                        this.setState({playerStatus: 'Draw', enemyStatus: 'Draw'});
+                    }
+                    
+                    $('#logs').append(logs);
+
+                    logsSummary += logs;
+
+                    this.setState({
+                        hp: hp,
+                        enemyHp: enemyHp,
+                        logs: logs,
+                        logsSummary: logsSummary,
+                        actionStatus: 'disabled',
+                        startBtnName: 'New Battle',
+                        startBtnStatus: '',
+                    });
+
+                    postData = {
+                        status: status,
+                        logsSummary: logsSummary,
+                        enemyName: this.state.enemyName
+                    };
+                    
+                    $.ajax({ url: '/dashboard/battle', method: 'POST', data: postData });
+
+                } else if (action != 'giveup') {
+
+                    $('#logs').append(logs);
+
+                    logsSummary += logs;
+
+                    this.setState({
+                        hp: hp,
+                        enemyHp: enemyHp,
+                        logs: logs,
+                        logsSummary: logsSummary
+                    });
+                }
+                
+            }
+            
         }
         render() {
             return (
-                <div className="player">
-                    <div className="player-container">
-                        <div className="name">{ this.state.name }</div>
-                        <div className="healthbar">{ this.state.hp}%</div>
+                <div className="row">
+                    <div className="col-lg-5 player">
+                        <div className="status">{ this.state.playerStatus }</div>
+                        <div className="player-container">
+                            <div className="name">{ this.state.name }</div>
+                            <div className="healthbar">{ this.state.hp}%</div>
+                        </div>
+                        <div className="player-actions">
+                            <button onClick={ this.handleClick } className='btn btn-sm btn-primary attack' data-action="attack" disabled={ this.state.actionStatus }>Attack</button>
+                            <button onClick={ this.handleClick } className='btn btn-sm btn-warning power' data-action="power" disabled={ this.state.actionStatus }>Power</button>
+                            <button onClick={ this.handleClick } className='btn btn-sm btn-success potion' data-action="potion" disabled={ this.state.actionStatus }>Potion</button>
+                            <button onClick={ this.handleClick } className='btn btn-sm btn-danger giveup' data-action="giveup" disabled={ this.state.actionStatus }>Give up</button>
+                        </div>
                     </div>
-                    <div className="player-actions">
-                        <button onClick={ this.handleClick } className='btn btn-sm btn-primary' data-action="attack">Attack</button>
-                        <button onClick={ this.handleClick } className='btn btn-sm btn-warning' data-action="power">Power</button>
-                        <button onClick={ this.handleClick } className='btn btn-sm btn-success' data-action="potion">Potion</button>
-                        <button onClick={ this.handleClick } className='btn btn-sm btn-danger' data-action="giveup">Give up</button>
+                    <div className="col-lg-2 event">
+                        <button onClick={ this.handleClick } className="btn btn-primary" data-action={ this.state.startBtnAction } disabled={ this.state.startBtnStatus }>{ this.state.startBtnName }</button>
                     </div>
+                    <div className="col-lg-5 enemy">
+                        <div className="status">{ this.state.enemyStatus }</div>
+                        <div className="enemy-container">
+                            <div className="name">{ this.state.enemyName }</div>
+                            <div className="healthbar">{ this.state.enemyHp }%</div>
+                        </div>
+                    </div>
+                    <div id="logs"></div>
                 </div>
             )
         }
     }
 
-    ReactDOM.render(<Player />, document.getElementById('player'));
+    ReactDOM.render(<Player />, document.getElementById('arena'));
 
 
 </script>
