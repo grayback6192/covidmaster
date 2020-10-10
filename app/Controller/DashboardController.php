@@ -8,14 +8,31 @@ Class DashboardController extends AppController
 
     public function index()
     {
-    }
 
+		if ($this->request->is('get')) {
+			if ($this->request->query('logid')) {
+				$this->ActionLog->id = $this->request->query('logid');
+				$this->autoRender = false;
+				echo json_encode($this->ActionLog->field('log_message'));
+			} else {
+				$histories = $this->GameHistory->query('
+					SELECT account.avatar as avatar, game_history.*
+					FROM account
+					JOIN game_history ON account.account_ID = game_history.account_ID
+					WHERE account.account_ID = ' . $this->Session->read('user.Account.account_ID') . '
+				'); //Need to use ORM if have time.
+
+				$this->set('histories', $histories);
+			}
+
+		}
+
+	}
+	
     public function battle()
     {
 
 		if ($this->request->is('post')) {
-			$this->loadModel('ActionLog');
-			$this->loadModel('GameHistory');
 
 			$logs = strip_tags($this->request->data('logsSummary'), '<br>');
 			$status = $this->request->data('status');
@@ -48,7 +65,9 @@ Class DashboardController extends AppController
 		if (!$this->Session->read('user')) {
 			return $this->redirect(array('controller' => 'Account', 'action' => 'signin'));
 		}
-        $this->layout = 'main';
+		$this->layout = 'main';
+		$this->loadModel('ActionLog');
+		$this->loadModel('GameHistory');
 
 	}
 	

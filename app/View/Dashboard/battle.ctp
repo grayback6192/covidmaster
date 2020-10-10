@@ -88,16 +88,16 @@ echo $this->Html->css('battle');
 
                 if (hp <= 0 || enemyHp <=0) {
 
-                    if (hp > enemyHp) {
+                    if (hp <= 0 && enemyHp <= 0) {
+                        status = 'D';
+                        this.setState({playerStatus: 'Draw', enemyStatus: 'Draw'});
+                    } else if (hp > enemyHp) {
                         status = 'W';
                         this.setState({playerStatus: 'Winner'});
                     } else if (hp < enemyHp) {
                         status = 'L';
                         this.setState({enemyStatus: 'Winner'});
-                    } else if (hp <= 0 && enemyHp <= 0) {
-                        status = 'D';
-                        this.setState({playerStatus: 'Draw', enemyStatus: 'Draw'});
-                    }
+                    } 
                     
                     $('#logs').append(logs);
 
