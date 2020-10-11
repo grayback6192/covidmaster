@@ -54,7 +54,7 @@ class Account extends AppModel {
 		'avatar' => array(
 			'maxLength' => array(
 				'rule' => array('maxLength', '30'),
-				'message' => 'Name should not be more than 30',
+				'message' => 'Avatar should not be more than 30',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -62,25 +62,26 @@ class Account extends AppModel {
 			),
 			'minLength' => array(
 				'rule' => array('minLength', '5'),
-				'message' => 'Name should not be less than 5',
+				'message' => 'Avatar should not be less than 5',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
-			'required' => array(
-				'rule' => array('required')
-			)
 		),
 		'email' => array(
-			'email' => array(
-				'rule' => array('email'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			'isUnique' => array(
+				'rule' => 'isUnique',
+				'message' => 'Email exists'
 			),
+			'email' => array(
+				'rule' => 'notBlank',
+				'message' => 'Must be an email format'
+			)
 		),
+		'password' => array(
+			'rule' => 'notBlank',
+			'message' => 'Password cannot be left blank'
+		)
 	);
 }

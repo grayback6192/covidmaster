@@ -16,9 +16,15 @@ class AccountController extends AppController {
 	{
 		if ($this->request->is('post')) {
 			$user = $this->Account->find('first', array('email' => $this->request->data['email']));
-			if (password_verify($this->request->data('pass'), $user['Account']['password']) && $user['Account']['email'] == $this->request->data('email')) {
-				$this->Session->write('user', $user);
-				return $this->redirect(array('controller' => 'dashboard', 'action' => 'index'));
+			if ($user) {
+				if (password_verify($this->request->data('pass'), $user['Account']['password']) && $user['Account']['email'] == $this->request->data('email')) {
+					$this->Session->write('user', $user);
+					return $this->redirect(array('controller' => 'dashboard', 'action' => 'index'));
+				} else {
+					$this->set('validationError', 'Invalid Email/Password');
+				}
+			} else {
+				$this->set('validationError', 'Email not found');
 			}
 		}
 
@@ -31,15 +37,22 @@ class AccountController extends AppController {
 	public function signup()
 	{
 		if ($this->request->is('post')) {
-			$data = array(
-				'name' => $this->request->data['name'],
-				'email' => $this->request->data['email'],
-				'password' => password_hash($this->request->data['pass'], PASSWORD_BCRYPT),
-				'avatar' => $this->request->data('avatar')
-			);
 
-			$this->Account->create();
-			$this->Account->save($data);
+			$this->Account->set($this->request->data);
+
+			if ($this->Account->validates())
+			{
+				$data = array(
+					'name' => $this->request->data['name'],
+					'email' => $this->request->data['email'],
+					'password' => password_hash($this->request->data['password'], PASSWORD_BCRYPT),
+					'avatar' => $this->request->data('avatar')
+				);
+				$this->Account->save($data);
+				return $this->redirect(array('controller' => 'Account', 'action' => 'signin'));
+			} else {
+				$this->set('validationErrorsArray', $this->Account->invalidFields());
+			}
 		}
 		
 	}

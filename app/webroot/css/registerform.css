@@ -164,6 +164,11 @@ input[type=radio] {
   -o-appearance: radio !important;
   -ms-appearance: radio !important; }
 
+.error-message {
+  color: red;
+}
+
+
 img {
   max-width: 100%;
   height: auto; }

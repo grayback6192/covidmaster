@@ -10,6 +10,8 @@
                 <form method="POST" class="signup-form">
                     <h2 class="form-title">Sign In</h2>
 
+                    <div class="error-message"><?php echo isset($validationError) ? $validationError : ''?></div>
+
                     <div class="form-textbox">
                         <label for="email">Email</label>
                         <input type="email" name="email" id="email" />
