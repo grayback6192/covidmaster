@@ -106,7 +106,7 @@
 
 @media only screen and (max-width: 768px) {
     #arena {
-        width: 500px !important;
+        width: 320px !important;
         height: 500px !important;
     }
     #arena .row > div {
@@ -138,7 +138,8 @@
         position: static !important;
     }
     #logs {
-        margin-left: 70px;
+        margin: 0 0 30px 0;
+        left: 30px;
     }
     .player .healthbar {
         margin-bottom: 10px;
