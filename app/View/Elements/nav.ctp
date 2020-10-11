@@ -13,9 +13,7 @@
 				<a class="nav-link" href="/dashboard/battle">Battle</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Configuration
-				</a>
+				<a class="nav-link" href="/dashboard/configuration" aria-haspopup="true" aria-expanded="false">Configuration</a>
 			</li>
 		</ul>
 		<span class="my-lg-0" style="color: white">

@@ -1,13 +1,13 @@
 <?php
 App::uses('AppController', 'Controller');
 
-Class DashboardController extends AppController 
+class DashboardController extends AppController
 {
 
-    public $scaffold;
+	public $scaffold;
 
-    public function index()
-    {
+	public function index()
+	{
 
 		if ($this->request->is('get')) {
 			if ($this->request->query('logid')) {
@@ -24,13 +24,11 @@ Class DashboardController extends AppController
 
 				$this->set('histories', $histories);
 			}
-
 		}
-
 	}
-	
-    public function battle()
-    {
+
+	public function battle()
+	{
 
 		if ($this->request->is('post')) {
 
@@ -51,44 +49,56 @@ Class DashboardController extends AppController
 				'status' => $status
 			));
 		}
+		$this->Configuration->account_ID = $this->Session->read('user.Account.account_id');
 
 		$this->set('enemyName', $this->enemyNames());
-    }
+		$this->set('timer', $this->Configuration->field('timer'));
+	}
 
-    public function configuration()
-    {
+	public function configuration()
+	{
+		$this->Configuration->account_ID = $this->Session->read('user.Account.account_id');
 
-    }
+		if ($this->request->is('post')) {
+			$configId = $this->Configuration->field('config_ID');
 
-    public function beforeFilter() 
-    {
+			$this->Configuration->config_ID = $configId;
+			$this->Configuration->save(array('config_ID' => $configId, 'timer' => $this->request->data('timer')));
+		}
+		
+		$this->set('timer', $this->Configuration->field('timer'));
+
+		
+	}
+
+	public function beforeFilter()
+	{
 		if (!$this->Session->read('user')) {
 			return $this->redirect(array('controller' => 'Account', 'action' => 'signin'));
 		}
 		$this->layout = 'main';
 		$this->loadModel('ActionLog');
 		$this->loadModel('GameHistory');
-
+		$this->loadModel('Configuration');
 	}
-	
+
 	private function enemyNames()
 	{
 		$names = array(
-            'Marburg virus',
-            'Ebola virus',
-            'Rabies Virus',
-            'HIV Virus',
-            'Smallpox Virus',
-            'Hanta Virus',
-            'Dengue Virus',
-            'Rotavirus',
-            'SARS-CoV',
-            'SARS-CoV-2',
-            'MERS-CoV',
-            'Seadornavirus'
+			'Marburg virus',
+			'Ebola virus',
+			'Rabies Virus',
+			'HIV Virus',
+			'Smallpox Virus',
+			'Hanta Virus',
+			'Dengue Virus',
+			'Rotavirus',
+			'SARS-CoV',
+			'SARS-CoV-2',
+			'MERS-CoV',
+			'Seadornavirus'
 		);
-		
-		return $names[rand(0,count($names) - 1)];
-	}
 
+		return $names[rand(0, count($names) - 1)];
+	}
 }

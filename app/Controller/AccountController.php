@@ -49,6 +49,15 @@ class AccountController extends AppController {
 					'avatar' => $this->request->data('avatar')
 				);
 				$this->Account->save($data);
+				$acctId = $this->Account->id;
+
+				$this->loadModel('Configuration');
+
+				$this->Configuration->save(array(
+					'account_ID' => $acctId,
+					'timer' => 60
+				));
+
 				return $this->redirect(array('controller' => 'Account', 'action' => 'signin'));
 			} else {
 				$this->set('validationErrorsArray', $this->Account->invalidFields());
@@ -61,6 +70,10 @@ class AccountController extends AppController {
 	{
 		$this->Session->destroy();
 		return $this->redirect(array('controller' => 'Account', 'action' => 'signin'));
+	}
+
+	public function beforeFilter()
+	{
 	}
 
 }

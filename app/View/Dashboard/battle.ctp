@@ -10,7 +10,7 @@ echo $this->Html->css('battle');
 
     class Player extends React.Component {
         state = {
-            timer: 60,
+            timer: <?php echo $timer ?>,
             playerStatus: '',
             enemyStatus: '',
             playerDmg: 10,
