@@ -10,6 +10,7 @@ echo $this->Html->css('battle');
 
     class Player extends React.Component {
         state = {
+            timer: 60,
             playerStatus: '',
             enemyStatus: '',
             playerDmg: 10,
@@ -25,6 +26,56 @@ echo $this->Html->css('battle');
             startBtnAction: 'start-battle',
             startBtnStatus: ''
         }
+        countDown = () => {
+            let timeLeft = this.state.timer - 1;
+            if (timeLeft == 0) {
+                this.tallyBattle(this.state.hp, this.state.enemyHp, 'Time Elapsed')
+            }
+            this.setState({
+                timer: timeLeft,
+            });
+            
+        }
+        tallyBattle = (hp, enemyHp, logs) => {
+            let postData;
+            let logsSummary = this.state.logsSummary;
+
+            clearInterval(this.timer);
+
+            if (hp <= 0 && enemyHp <= 0) {
+                status = 'D';
+                this.setState({playerStatus: 'Draw', enemyStatus: 'Draw'});
+            } else if (hp > enemyHp) {
+                status = 'W';
+                this.setState({playerStatus: 'Winner'});
+            } else if (hp < enemyHp) {
+                status = 'L';
+                this.setState({enemyStatus: 'Winner'});
+            } 
+            
+            $('#logs').append(logs);
+
+            logsSummary += logs;
+
+            this.setState({
+                hp: hp,
+                enemyHp: enemyHp,
+                logs: logs,
+                logsSummary: logsSummary,
+                actionStatus: 'disabled',
+                startBtnName: 'New Battle',
+                startBtnStatus: '',
+            });
+
+            postData = {
+                status: status,
+                logsSummary: logsSummary,
+                enemyName: this.state.enemyName
+            };
+            
+            $.ajax({ url: '/dashboard/battle', method: 'POST', data: postData });
+
+        }
         handleClick = (e) => {
             let hp, enemyHp, playerDmg, enemyDmg, logs, playerHeal, postData, status;
             let logsSummary = this.state.logsSummary;
@@ -36,6 +87,9 @@ echo $this->Html->css('battle');
                     startBtnStatus: 'disabled',
                     startBtnAction: 'reload'
                 });
+
+                this.timer = setInterval(this.countDown, 1000);
+
             } else if (action == 'reload') {
                 location.reload();
             } else {
@@ -69,10 +123,15 @@ echo $this->Html->css('battle');
 
                 } else if (action == 'giveup') {
 
+                    clearInterval(this.timer);
+
                     logs = this.state.name + ' gave up ';
+                    $('#logs').append(logs);
+
+                    logsSummary += logs;
                     
                     postData = {
-                        'logs' : this.state.logsSummary,
+                        'logsSummary' : logsSummary,
                         'status' : 'L',
                         'enemyName' : this.state.enemyName
                     };
@@ -80,7 +139,8 @@ echo $this->Html->css('battle');
                     this.setState({
                         actionStatus: 'disabled',
                         startBtnName: 'New Battle',
-                        startBtnStatus: ''
+                        startBtnStatus: '',
+                        logsSummary: logsSummary
                     });
 
                     $.ajax({ url: '/dashboard/battle', method: 'POST', data: postData });
@@ -88,38 +148,7 @@ echo $this->Html->css('battle');
 
                 if (hp <= 0 || enemyHp <=0) {
 
-                    if (hp <= 0 && enemyHp <= 0) {
-                        status = 'D';
-                        this.setState({playerStatus: 'Draw', enemyStatus: 'Draw'});
-                    } else if (hp > enemyHp) {
-                        status = 'W';
-                        this.setState({playerStatus: 'Winner'});
-                    } else if (hp < enemyHp) {
-                        status = 'L';
-                        this.setState({enemyStatus: 'Winner'});
-                    } 
-                    
-                    $('#logs').append(logs);
-
-                    logsSummary += logs;
-
-                    this.setState({
-                        hp: hp,
-                        enemyHp: enemyHp,
-                        logs: logs,
-                        logsSummary: logsSummary,
-                        actionStatus: 'disabled',
-                        startBtnName: 'New Battle',
-                        startBtnStatus: '',
-                    });
-
-                    postData = {
-                        status: status,
-                        logsSummary: logsSummary,
-                        enemyName: this.state.enemyName
-                    };
-                    
-                    $.ajax({ url: '/dashboard/battle', method: 'POST', data: postData });
+                    this.tallyBattle(hp, enemyHp, logs);
 
                 } else if (action != 'giveup') {
 
@@ -155,6 +184,7 @@ echo $this->Html->css('battle');
                         </div>
                     </div>
                     <div className="col-lg-2 event">
+                        <div className="timer">{ this.state.timer }</div>
                         <button onClick={ this.handleClick } className="btn btn-primary" data-action={ this.state.startBtnAction } disabled={ this.state.startBtnStatus }>{ this.state.startBtnName }</button>
                     </div>
                     <div className="col-lg-5 enemy">

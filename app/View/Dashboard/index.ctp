@@ -60,7 +60,6 @@ $this->assign('title', 'Covid Masters | Dashboard');
                 $('#log-modal .modal-body').empty().append('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
             },
             success: function(data) {
-                debugger;
                 $('#log-modal .modal-body').empty().append(data);
             
             }
