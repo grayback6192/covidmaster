@@ -15,7 +15,7 @@ class AccountController extends AppController {
 	public function signin()
 	{
 		if ($this->request->is('post')) {
-			$user = $this->Account->find('first', array('email' => $this->request->data['email']));
+			$user = $this->Account->findByEmail($this->request->data['email']);
 			if ($user) {
 				if (password_verify($this->request->data('pass'), $user['Account']['password']) && $user['Account']['email'] == $this->request->data('email')) {
 					$this->Session->write('user', $user);

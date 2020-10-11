@@ -49,24 +49,26 @@ class DashboardController extends AppController
 				'status' => $status
 			));
 		}
-		$this->Configuration->account_ID = $this->Session->read('user.Account.account_id');
+		$config = $this->Configuration->query('SELECT * from configuration where account_ID = ' . $this->Session->read('user.Account.account_ID'));
 
 		$this->set('enemyName', $this->enemyNames());
-		$this->set('timer', $this->Configuration->field('timer'));
+		$this->set('timer', $config[0]['configuration']['timer']);
 	}
 
 	public function configuration()
 	{
-		$this->Configuration->account_ID = $this->Session->read('user.Account.account_id');
+		$config = $this->Configuration->query('SELECT * from configuration where account_ID = ' . $this->Session->read('user.Account.account_ID')); //Need to improve database
 
 		if ($this->request->is('post')) {
-			$configId = $this->Configuration->field('config_ID');
+			$configId = $config[0]['configuration']['config_ID'];
 
 			$this->Configuration->config_ID = $configId;
 			$this->Configuration->save(array('config_ID' => $configId, 'timer' => $this->request->data('timer')));
+			$this->set('timer', $this->request->data('timer'));
+		} else {
+			$this->set('timer', $config[0]['configuration']['timer']);
 		}
-		
-		$this->set('timer', $this->Configuration->field('timer'));
+
 
 		
 	}
