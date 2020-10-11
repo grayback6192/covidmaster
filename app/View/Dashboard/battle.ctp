@@ -56,7 +56,7 @@ echo $this->Html->css('battle');
                     hp = this.state.hp - enemyDmg;
                     enemyHp = this.state.enemyHp - playerDmg;
 
-                    logs = this.state.name + ' dealt ' + playerDmg + ' damage<br>' + this.state.enemyName + ' dealt ' + enemyDmg + ' damage<br><br>';
+                    logs = this.state.name + ' dealt ' + playerDmg + ' power damage<br>' + this.state.enemyName + ' dealt ' + enemyDmg + ' damage<br><br>';
 
                 } else if (action == 'potion') {
                     playerHeal = (Math.floor(Math.random() * 10));
@@ -69,7 +69,7 @@ echo $this->Html->css('battle');
 
                 } else if (action == 'giveup') {
 
-                    logs = this.state.name + ' healed for ' + playerHeal + '<br>' + this.state.enemyName + ' dealt ' + enemyDmg + ' damage<br><br>';
+                    logs = this.state.name + ' gave up ';
                     
                     postData = {
                         'logs' : this.state.logsSummary,
