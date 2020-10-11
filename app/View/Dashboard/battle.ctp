@@ -170,7 +170,7 @@ echo $this->Html->css('battle');
         render() {
             return (
                 <div className="row">
-                    <div className="col-lg-5 player">
+                    <div className="col-md-5 col-lg-5 player">
                         <div className="status">{ this.state.playerStatus }</div>
                         <div className="player-container">
                             <div className="name">{ this.state.name }</div>
@@ -183,11 +183,11 @@ echo $this->Html->css('battle');
                             <button onClick={ this.handleClick } className='btn btn-sm btn-danger giveup' data-action="giveup" disabled={ this.state.actionStatus }>Give up</button>
                         </div>
                     </div>
-                    <div className="col-lg-2 event">
+                    <div className="col-md-2 col-lg-2 event">
                         <div className="timer">{ this.state.timer }</div>
                         <button onClick={ this.handleClick } className="btn btn-primary" data-action={ this.state.startBtnAction } disabled={ this.state.startBtnStatus }>{ this.state.startBtnName }</button>
                     </div>
-                    <div className="col-lg-5 enemy">
+                    <div className="col-md-5 col-lg-5 enemy">
                         <div className="status">{ this.state.enemyStatus }</div>
                         <div className="enemy-container">
                             <div className="name">{ this.state.enemyName }</div>

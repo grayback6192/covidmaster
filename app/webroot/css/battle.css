@@ -91,3 +91,59 @@
     font-size: 24px;
     font-weight: bold;
 }
+
+
+@media only screen and (max-width: 1426px) {
+    #logs {
+        position: relative;
+        margin: auto;
+        margin-left: 165px;
+        margin-top: 30px;
+        margin-bottom: 50px;
+        height: 120px !important;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    #arena {
+        width: 500px !important;
+        height: 500px !important;
+    }
+    #arena .row > div {
+        height: 150px;
+        padding: 0;
+        margin-top: 30px;
+    }
+    .player-actions {
+        position: static !important;
+        text-align: center;
+        margin: auto;
+    }
+    .player-container {
+        position: static !important;
+    }
+    .event button {
+        position: static !important;
+    }
+    .timer {
+        color: black !important;
+    }
+    .enemy-container {
+        position: static !important
+    }
+    #arena .row > div:nth-child(2) {
+        border: none;
+    }
+    .status {
+        position: static !important;
+    }
+    #logs {
+        margin-left: 70px;
+    }
+    .player .healthbar {
+        margin-bottom: 10px;
+    }
+    .enemy {
+        margin-top: 0 !important;
+    }
+}
